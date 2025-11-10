@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopHub - Modern E-commerce</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <h2>ShopHub</h2>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Men</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">Women</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link cart-link">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="cart-count">0</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link login-link">Login</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link admin-link">Admin</a>
+                </li>
+            </ul>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Discover Your Style</h1>
+            <p class="hero-quote">"Fashion is the armor to survive the reality of everyday life"</p>
+            <button class="cta-button" onclick="scrollToFeatured()">
+                <i class="fas fa-shopping-bag"></i> Go Shopping
+            </button>
+        </div>
+        <div class="hero-image">
+            <div class="hero-placeholder">
+                <i class="fas fa-shopping-bag"></i>
+            </div>
+        </div>
+    </section>
+
+    <!-- Shop by Category -->
+    <section class="category-section">
+        <div class="container">
+            <h2 class="section-title">Shop by Category</h2>
+            <div class="category-grid">
+                <div class="category-card men-category">
+                    <div class="category-overlay">
+                        <h3>Men</h3>
+                        <button class="category-btn" onclick="filterByCategory('men')">Shop Now</button>
+                    </div>
+                </div>
+                <div class="category-card women-category">
+                    <div class="category-overlay">
+                        <h3>Women</h3>
+                        <button class="category-btn" onclick="filterByCategory('women')">Shop Now</button>
+                    </div>
+                </div>
+                <div class="category-card all-category">
+                    <div class="category-overlay">
+                        <h3>All Products</h3>
+                        <button class="category-btn" onclick="filterByCategory('all')">Shop Now</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Products -->
+    <section class="products-section" id="featured-products">
+        <div class="container">
+            <h2 class="section-title">Featured Products</h2>
+            <div class="products-grid" id="products-grid">
+                <!-- Products will be dynamically loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Modal -->
+    <div class="modal" id="product-modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <div class="modal-body">
+                <div class="modal-image">
+                    <img id="modal-product-image" src="" alt="Product Image">
+                    <div class="modal-thumbnails" id="modal-thumbnails"></div>
+                </div>
+                <div class="modal-details">
+                    <h3 id="modal-product-title"></h3>
+                    <p id="modal-product-description"></p>
+                    <div class="price-section">
+                        <span class="original-price" id="modal-original-price"></span>
+                        <span class="discount-price" id="modal-discount-price"></span>
+                    </div>
+                    <div class="quantity-section">
+                        <label for="quantity">Quantity:</label>
+                        <div class="quantity-controls">
+                            <button class="qty-btn" onclick="decreaseQuantity()">-</button>
+                            <input type="number" id="quantity" value="1" min="1" max="10">
+                            <button class="qty-btn" onclick="increaseQuantity()">+</button>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-add-cart" onclick="addToCart()">
+                            <i class="fas fa-shopping-cart"></i> Add to Cart
+                        </button>
+                        <button class="btn-buy-now" onclick="buyNow()">
+                            <i class="fas fa-bolt"></i> Buy Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cart-modal">
+        <div class="modal-content cart-modal-content">
+            <span class="close" onclick="closeCartModal()">&times;</span>
+            <div class="cart-header">
+                <h3>Shopping Cart</h3>
+                <div class="cart-count-badge" id="cart-count-badge">0</div>
+            </div>
+            <div class="cart-items" id="cart-items">
+                <!-- Cart items will be dynamically loaded here -->
+            </div>
+            <div class="cart-summary">
+                <div class="cart-total">
+                    <span class="cart-total-label">Total:</span>
+                    <span class="cart-total-amount">$<span id="cart-total">0.00</span></span>
+                </div>
+                <div class="cart-actions">
+                    <button class="btn-checkout" onclick="checkout()">
+                        <i class="fas fa-credit-card"></i> Checkout
+                    </button>
+                    <button class="btn-continue" onclick="closeCartModal()">
+                        <i class="fas fa-shopping-bag"></i> Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal">
+        <div class="modal-content login-modal-content">
+            <span class="close" onclick="closeLoginModal()">&times;</span>
+            <h3>Login</h3>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email:</label>
+                    <input type="email" id="login-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <button type="submit" class="btn-login">Login</button>
+                <p class="form-link">
+                    Don't have an account? <a href="#" onclick="showSignup()">Create Account</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Signup Modal -->
+    <div class="modal" id="signup-modal">
+        <div class="modal-content login-modal-content">
+            <span class="close" onclick="closeSignupModal()">&times;</span>
+            <h3>Create Account</h3>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="signup-name">Full Name:</label>
+                    <input type="text" id="signup-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-email">Email:</label>
+                    <input type="email" id="signup-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="signup-password">Password:</label>
+                    <input type="password" id="signup-password" required>
+                </div>
+                <button type="submit" class="btn-login">Create Account</button>
+                <p class="form-link">
+                    Already have an account? <a href="#" onclick="showLogin()">Login</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div class="modal" id="admin-login-modal">
+        <div class="modal-content login-modal-content">
+            <span class="close" onclick="closeAdminLoginModal()">&times;</span>
+            <h3>Admin Login</h3>
+            <form id="admin-login-form">
+                <div class="form-group">
+                    <label for="admin-email">Email or Username:</label>
+                    <input type="text" id="admin-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-password">Password:</label>
+                    <input type="password" id="admin-password" required>
+                </div>
+                <button type="submit" class="btn-login">Admin Login</button>
+                <p class="form-link">
+                    Need an admin account? <a href="#" onclick="openAdminSignupModal()">Create Admin</a>
+                </p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Signup Modal -->
+    <div class="modal" id="admin-signup-modal">
+        <div class="modal-content login-modal-content">
+            <span class="close" onclick="closeAdminSignupModal()">&times;</span>
+            <h3>Create Admin Account</h3>
+            <form id="admin-signup-form">
+                <div class="form-group">
+                    <label for="admin-signup-username">Username:</label>
+                    <input type="text" id="admin-signup-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-signup-email">Email:</label>
+                    <input type="email" id="admin-signup-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="admin-signup-password">Password:</label>
+                    <input type="password" id="admin-signup-password" required>
+                </div>
+                <button type="submit" class="btn-login">Create Admin</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard Modal -->
+    <div class="modal" id="admin-dashboard-modal">
+        <div class="modal-content cart-modal-content">
+            <button class="admin-logout-button" onclick="logout()">Logout</button>
+            <div class="cart-header">
+                <h3>Admin Dashboard</h3>
+            </div>
+            <div class="admin-dashboard-body">
+                <div class="admin-section">
+                    <h4>Add Product</h4>
+                    <form id="admin-add-product-form">
+                        <div class="form-group">
+                            <label for="admin-product-name">Name</label>
+                            <input type="text" id="admin-product-name" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-product-description">Description</label>
+                            <textarea id="admin-product-description" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-product-price">Price</label>
+                            <input type="number" id="admin-product-price" step="0.01" min="0" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-product-category">Category</label>
+                            <input type="text" id="admin-product-category" placeholder="e.g., men, women, electronics" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-product-stock">Stock Quantity</label>
+                            <input type="number" id="admin-product-stock" min="0" value="0" />
+                        </div>
+                        <div class="form-group">
+                            <label for="admin-product-images">Images (upload at least 4)</label>
+                            <input type="file" id="admin-product-images" accept="image/*" multiple />
+                        </div>
+                        <button type="submit" class="btn-login">Add Product</button>
+                    </form>
+                </div>
+                <div class="admin-section">
+                    <h4>My Products</h4>
+                    <div id="admin-products-list">
+                        <!-- Admin products will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkout-modal">
+        <div class="modal-content cart-modal-content">
+            <span class="close" onclick="closeCheckoutModal()">&times;</span>
+            <div class="cart-header">
+                <h3>Checkout</h3>
+            </div>
+            <form id="checkout-form">
+                <div class="form-group">
+                    <label for="checkout-name">Full Name:</label>
+                    <input type="text" id="checkout-name" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkout-email">Email:</label>
+                    <input type="email" id="checkout-email" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkout-phone">Phone Number:</label>
+                    <input type="tel" id="checkout-phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="checkout-address">Shipping Address:</label>
+                    <textarea id="checkout-address" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="checkout-payment">Payment Method:</label>
+                    <select id="checkout-payment" required>
+                        <option value="cash-on-delivery" selected>Cash on Delivery</option>
+                    </select>
+                    <small style="display:block;margin-top:6px;color:#6b7280;">Only Cash on Delivery is available.</small>
+                </div>
+                <div class="cart-summary">
+                    <div class="cart-total">
+                        <span class="cart-total-label">Total Amount:</span>
+                        <span class="cart-total-amount">$<span id="checkout-total">0.00</span></span>
+                    </div>
+                    <button type="submit" class="btn-checkout">
+                        <i class="fas fa-lock"></i> Place Order
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
